@@ -16,6 +16,7 @@ public class Application implements ApplicationListener{
 	private ShapeRenderer sr;
 	private OrthographicCamera cam;
 	private Algorithm algorithm;
+	public static boolean debug = true;
 	
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
@@ -46,6 +47,10 @@ public class Application implements ApplicationListener{
 		sr.setProjectionMatrix(cam.combined);
 		sr.begin(ShapeType.Filled);
 		algorithm.render(sr);
+		sr.end();
+		sr.setProjectionMatrix(cam.combined);
+		sr.begin(ShapeType.Line);
+		algorithm.edge(sr);
 		sr.end();
 	}
 

@@ -1,5 +1,8 @@
 package uk.ac.aber.user.jov2.pathfinding.algorithm;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -8,8 +11,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import uk.ac.aber.user.jov2.pathfinding.model.Algorithm;
 import uk.ac.aber.user.jov2.pathfinding.model.Cell;
-import uk.ac.aber.user.jov2.pathfinding.model.World;
 import uk.ac.aber.user.jov2.pathfinding.model.Cell.CELL_STATE;
+import uk.ac.aber.user.jov2.pathfinding.model.World;
 
 public class AStart extends Algorithm {
 
@@ -36,13 +39,17 @@ public class AStart extends Algorithm {
 				b.setState(CELL_STATE.POINT);
 			}
 		}else if(Gdx.input.isKeyJustPressed(Keys.SPACE)){
-			// TODO A* Algorithm
+			this.aStart();
 		}
+	}
+	
+	private void aStart(){
+		// TODO A start algorithm
 	}
 
 	@Override
-	public void render(ShapeRenderer sr) {
-		world.render(sr);
-	}
-
+	public void render(ShapeRenderer sr) { world.render(sr); }
+	
+	@Override
+	public void edge(ShapeRenderer sr) { world.edge(sr); }
 }

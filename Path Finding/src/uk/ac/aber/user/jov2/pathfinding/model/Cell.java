@@ -5,13 +5,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Cell {
 	
-	public enum CELL_STATE {EMPTY, POINT, EDGE, PATH};
+	public enum CELL_STATE {EMPTY, POINT, EDGE, PATH, OBSTACLE};
 	
 	public CELL_STATE currentState;
 	
 	public static float SIZE;
 	
-	private int x, y;
+	public int x, y;
 	
 	public Cell(int x, int y) {
 		this.x = x;
@@ -32,7 +32,13 @@ public class Cell {
 			sr.setColor(Color.GREEN);
 		}else if(currentState == CELL_STATE.POINT){
 			sr.setColor(Color.BLUE);
+		}else if(currentState == CELL_STATE.OBSTACLE){
+			sr.setColor(Color.BLACK);
 		}
+		sr.box(x * SIZE, y * SIZE, 0, SIZE, SIZE, 0);
+	}
+
+	public void debug(ShapeRenderer sr) {
 		sr.box(x * SIZE, y * SIZE, 0, SIZE, SIZE, 0);
 	}
 

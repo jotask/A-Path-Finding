@@ -6,5 +6,6 @@ public abstract class Algorithm {
 	
 	public abstract void update(float delta);
 	public abstract void render(ShapeRenderer sr);
+	public abstract void edge(ShapeRenderer sr);
 	
 }

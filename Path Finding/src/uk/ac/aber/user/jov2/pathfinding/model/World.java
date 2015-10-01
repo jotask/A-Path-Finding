@@ -1,5 +1,6 @@
 package uk.ac.aber.user.jov2.pathfinding.model;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -28,6 +29,10 @@ public class World {
 		return cells[x][y];
 	}
 	
+	public Cell[][] getWorld(){
+		return cells;
+	}
+	
 	public void render(ShapeRenderer sr){
 		for(int i = 0; i < cells.length; i++){
 			for(int j = 0; j < cells[0].length; j++){
@@ -35,5 +40,14 @@ public class World {
 			}
 		}
 	}
-
+	
+	public void edge(ShapeRenderer sr){
+		sr.setColor(Color.BLACK);
+		for(int i = 0; i < cells.length; i++){
+			for(int j = 0; j < cells[0].length; j++){
+				cells[i][j].debug(sr);
+			}
+		}
+	}
+	
 }
