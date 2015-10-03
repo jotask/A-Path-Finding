@@ -61,24 +61,18 @@ public class AStart extends Algorithm {
 			int y = (int) (mouse.y / Node.SIZE);
 			
 			Node selected = world.getNode(x, y);
-			boolean isObstacle;
-
-			if(selected.getState().equals(NODESTATE.OBSTACLE)){
-				isObstacle = true;
-			}else{
-				isObstacle = false;
-			}
 			
 			if(selected.equals(start) || selected.equals(target)){
 				return;
-			}else if(isObstacle){
-				System.out.println("obstacle");
-				selected.setState(NODESTATE.EMPTY);
 			}
 			
 			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
-				if(Gdx.input.isKeyPressed(Keys.O)){
-					selected.setState(NODESTATE.OBSTACLE);
+				if(Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)){
+					if(selected.getState().equals(NODESTATE.OBSTACLE)){
+						selected.setState(NODESTATE.EMPTY);
+					}else{
+						selected.setState(NODESTATE.OBSTACLE);
+					}
 				}else{
 					start = selected;
 					start.setState(NODESTATE.START);
