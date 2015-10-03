@@ -5,47 +5,80 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 
+import uk.ac.aber.user.jov2.pathfinding.model.Node.NODE_STATE;
+
 public class World {
 	
-	private Cell[][] cells;
+	private Node[][] nodes;
 	
 	public World(int size, OrthographicCamera cam) {
-		cells = new Cell[size][size];
-		for(int i = 0; i < cells.length; i++){
-			for(int j = 0; j < cells[0].length; j++){
-				cells[i][j] = new Cell(i, j);
+		nodes = new Node[size][size];
+		for(int i = 0; i < nodes.length; i++){
+			for(int j = 0; j < nodes[0].length; j++){
+				nodes[i][j] = new Node(i, j);
 			}
 		}
-		Cell.SIZE = (int) (cam.viewportWidth / size); 
+		Node.SIZE = (int) (cam.viewportWidth / size); 
 	}
 	
-	public Cell getRandomPoint(){
-		int x = MathUtils.random(cells.length - 1);
-		int y = MathUtils.random(cells[0].length - 1);
-		return cells[x][y];
+	public Node getRandomPoint(){
+		int x = MathUtils.random(nodes.length - 1);
+		int y = MathUtils.random(nodes[0].length - 1);
+		return nodes[x][y];
 	}
 	
-	public Cell getcell(int x, int y){
-		return cells[x][y];
+	public Node getNode(int x, int y){
+		Node result;
+		try{
+			result = nodes[x][y];
+		}catch(ArrayIndexOutOfBoundsException e){
+			result = null;
+		}
+		return result;
 	}
 	
-	public Cell[][] getWorld(){
-		return cells;
+	public void restart(Node a, Node b){
+		for(int i = 0; i < nodes.length; i++){
+			for(int j = 0; j < nodes.length; j++){
+				Node n = nodes[i][j];
+				if(a != n && b != n)
+					nodes[i][j].setState(NODE_STATE.EMPTY);
+			}
+		}
+	}
+	
+	public Node[][] getWorld(){
+		return nodes;
 	}
 	
 	public void render(ShapeRenderer sr){
-		for(int i = 0; i < cells.length; i++){
-			for(int j = 0; j < cells[0].length; j++){
-				cells[i][j].render(sr);
+		for(int i = 0; i < nodes.length; i++){
+			for(int j = 0; j < nodes[0].length; j++){
+				nodes[i][j].render(sr);
 			}
 		}
+	}
+	
+	public void calculateH(Node target){
+		for(int i = 0; i < nodes.length; i++){
+			for(int j = 0; j < nodes[0].length; j++){
+				knowH(nodes[i][j], target);
+			}
+		}
+	}
+	
+	private void knowH(Node node, Node target){
+		int x = Math.abs(node.x - target.x);
+		int y = Math.abs(node.y - target.y);
+		int h = x + y;
+		node.setH(h);
 	}
 	
 	public void edge(ShapeRenderer sr){
 		sr.setColor(Color.BLACK);
-		for(int i = 0; i < cells.length; i++){
-			for(int j = 0; j < cells[0].length; j++){
-				cells[i][j].debug(sr);
+		for(int i = 0; i < nodes.length; i++){
+			for(int j = 0; j < nodes[0].length; j++){
+				nodes[i][j].debug(sr);
 			}
 		}
 	}
