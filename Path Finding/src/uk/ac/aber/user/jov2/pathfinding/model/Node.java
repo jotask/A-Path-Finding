@@ -1,6 +1,5 @@
 package uk.ac.aber.user.jov2.pathfinding.model;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Node {
@@ -8,22 +7,7 @@ public class Node {
 	public static final int BASICMOVEMENTCOST = 10;
 	public static final int DIAGONALMOVEMENTCOST = 14;
 	
-	public enum NODE_STATE {
-		EMPTY (Color.WHITE),
-		TARGET (Color.YELLOW),
-		START (Color.ORANGE),
-		PATH (Color.GREEN),
-		OBSTACLE (Color.BLACK),
-		CHECKED (Color.GRAY);
-		
-		public Color color;
-		private NODE_STATE(Color c) {
-			this.color = c;
-		}
-		
-		};
-	
-	public NODE_STATE currentState;
+	public NODESTATE currentState;
 	
 	public static float SIZE;
 	
@@ -37,10 +21,10 @@ public class Node {
 	public Node(int x, int y) {
 		this.x = x;
 		this.y = y;
-		currentState = NODE_STATE.EMPTY;
+		currentState = NODESTATE.EMPTY;
 	}
 	
-	public void setState(NODE_STATE state){
+	public void setState(NODESTATE state){
 		currentState = state;
 	}
 	
@@ -61,6 +45,12 @@ public class Node {
 		return this.g;
 	}
 	
+	public void calculateH(Node target){
+		int x = Math.abs(this.x - target.x);
+		int y = Math.abs(this.y - target.y);
+		this.heuristic = x + y * BASICMOVEMENTCOST;
+	}
+	
 	public int getF(){
 		return this.heuristic + this.g;
 	}
@@ -73,8 +63,16 @@ public class Node {
 		this.g = _g;
 	}
 	
-	public Node getParen(){
+	public Node getParent(){
 		return this.parent;
+	}
+	
+	public boolean haveParent(){
+		if(parent != null){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	public void setParent(Node parent){
@@ -85,6 +83,15 @@ public class Node {
 		if((this.x == other.x ) && (this.y == other.y))
 			return true;
 		return false;
+	}
+	
+	public NODESTATE getState(){
+		return this.currentState;
+	}
+	
+	@Override
+	public String toString() {
+		return x + " - " + y;
 	}
 
 }
