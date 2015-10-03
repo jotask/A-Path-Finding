@@ -37,12 +37,12 @@ public class World {
 		return result;
 	}
 	
-	public void restart(Node a, Node b){
+	public void restart(Node start, Node target){
 		for(int i = 0; i < nodes.length; i++){
 			for(int j = 0; j < nodes.length; j++){
 				Node n = nodes[i][j];
-				if(a != n && b != n)
-					nodes[i][j].setState(NODE_STATE.EMPTY);
+				if(!n.equals(start) && !n.equals(target))
+					n.setState(NODE_STATE.EMPTY);
 			}
 		}
 	}

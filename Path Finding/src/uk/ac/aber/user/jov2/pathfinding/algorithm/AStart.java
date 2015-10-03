@@ -1,13 +1,14 @@
 package uk.ac.aber.user.jov2.pathfinding.algorithm;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import uk.ac.aber.user.jov2.pathfinding.model.Algorithm;
 import uk.ac.aber.user.jov2.pathfinding.model.Node;
@@ -17,29 +18,36 @@ import uk.ac.aber.user.jov2.pathfinding.model.World;
 public class AStart extends Algorithm {
 
 	private World world;
+	private OrthographicCamera cam;
 		
 	private Node start, target;
 
 	public AStart(OrthographicCamera cam) {
-		world = new World(6, cam);
+		this.cam = cam;
+		world = new World(10, this.cam);
 		start = world.getRandomPoint();
-		start.setState(NODE_STATE.POINT);
+		start.setState(NODE_STATE.START);
 		target = world.getRandomPoint();
-		target.setState(NODE_STATE.POINT);
+		target.setState(NODE_STATE.TARGET);
 	}
 
 	@Override
 	public void update(float delta) {
 		if (Gdx.input.justTouched()) {
+			Vector3 mouse = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+			cam.unproject(mouse);
 			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
-				start.setState(NODE_STATE.EMPTY);
-				start = world.getRandomPoint();
-				start.setState(NODE_STATE.POINT);
+				int x = (int) (mouse.x / Node.SIZE);
+				int y = (int) (mouse.y / Node.SIZE);
+				start = world.getNode(x, y);
+				start.setState(NODE_STATE.START);
 			} else if (Gdx.input.isButtonPressed(Buttons.RIGHT)) {
-				target.setState(NODE_STATE.EMPTY);
-				target = world.getRandomPoint();
-				target.setState(NODE_STATE.POINT);
+				int x = (int) (mouse.x / Node.SIZE);
+				int y = (int) (mouse.y / Node.SIZE);
+				target = world.getNode(x, y);
+				target.setState(NODE_STATE.TARGET);
 			}
+			world.restart(start, target);
 		}else if(Gdx.input.isKeyJustPressed(Keys.SPACE)){
 			this.aStart();
 		}
@@ -47,7 +55,6 @@ public class AStart extends Algorithm {
 	
 	private void aStart(){
 		// TODO A start algorithm
-		world.restart(start, target);
 		boolean pathFinded = false;
 		ArrayList<Node> open = new ArrayList<Node>();
 		ArrayList<Node> closed = new ArrayList<Node>();
@@ -70,7 +77,8 @@ public class AStart extends Algorithm {
 				ArrayList<Node> adjacent = this.getAdjacents(current);
 				for(Node n: adjacent){
 					if(n != null){
-						n.setState(NODE_STATE.CHECKED);
+						if(!start.equals(n) && !target.equals(n))
+							n.setState(NODE_STATE.CHECKED);
 						n.setParent(current);
 						n.setG(current.getH() + n.getH());
 						if(!open.contains(n)){

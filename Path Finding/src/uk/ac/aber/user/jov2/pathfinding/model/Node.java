@@ -8,7 +8,20 @@ public class Node {
 	public static final int BASICMOVEMENTCOST = 10;
 	public static final int DIAGONALMOVEMENTCOST = 14;
 	
-	public enum NODE_STATE {EMPTY, POINT, EDGE, PATH, OBSTACLE, CHECKED};
+	public enum NODE_STATE {
+		EMPTY (Color.WHITE),
+		TARGET (Color.YELLOW),
+		START (Color.ORANGE),
+		PATH (Color.GREEN),
+		OBSTACLE (Color.BLACK),
+		CHECKED (Color.GRAY);
+		
+		public Color color;
+		private NODE_STATE(Color c) {
+			this.color = c;
+		}
+		
+		};
 	
 	public NODE_STATE currentState;
 	
@@ -32,19 +45,7 @@ public class Node {
 	}
 	
 	public void render(ShapeRenderer sr){
-		if(currentState == NODE_STATE.EMPTY){
-			sr.setColor(Color.WHITE);
-		}else if(currentState == NODE_STATE.EDGE){
-			sr.setColor(Color.RED);
-		}else if(currentState == NODE_STATE.PATH){
-			sr.setColor(Color.GREEN);
-		}else if(currentState == NODE_STATE.POINT){
-			sr.setColor(Color.BLUE);
-		}else if(currentState == NODE_STATE.OBSTACLE){
-			sr.setColor(Color.BLACK);
-		}else if(currentState == NODE_STATE.CHECKED){
-			sr.setColor(Color.GRAY);
-		}
+		sr.setColor(currentState.color);
 		sr.box(x * SIZE, y * SIZE, 0, SIZE, SIZE, 0);
 	}
 
@@ -78,6 +79,12 @@ public class Node {
 
 	public void setParent(Node parent){
 		this.parent = parent;
+	}
+	
+	public boolean equals(Node other) {
+		if((this.x == other.x ) && (this.y == other.y))
+			return true;
+		return false;
 	}
 
 }
